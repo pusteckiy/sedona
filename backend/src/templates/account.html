@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Аккаунт{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 5rem;">
+    <div class="row">
+        <div class="col-lg-5 col-12">
+            <div class="row">
+                <div class="col container-bg profile-bg">
+                    {% if user.avatar %}
+                    <img class="profile-img"
+                        src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" alt="User">
+                    {% else%}
+                    <img class="profile-img" src="{% static 'img/no-avatar.jpg'%}" alt="User">
+                    {% endif %}
+                    <div class="profile-info">
+                        {% if user.nickname and user.is_active %}
+                        <div class="profile-nickname">{{ user.nickname }}</div>
+                        {% else %}
+                        <div class="profile-nickname">Не установлен</div>
+                        {% endif %}
+                        <div>{{ user.money }} $</div>
+                        <div>{{ user.coins }} SC</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col container-bg deposit-bg">
+                    {% if not user.is_active %}
+                    <p>Зайдите в игру, после чего укажите свой никнейм.</p>
+                    <form action="connect" method="post" id="nickname-form">
+                        {% csrf_token %}
+                        {{ connect_account_form.nickname }}
+                        <input id="nickname-form-button" type="submit" value="Привязать">
+                    </form>
+                    <form action="connect/code" method="post" id="code-form" class="d-none">
+                        {% csrf_token %}
+                        {{ input_account_code_form.code }}
+                        <input id="code-form-button" type="submit" value="Подтвердить">
+                    </form>
+                    {% else %}
+                    <p class="fw-bold">Пополнение виртов на данный момент не работает.</p>
+                    <!-- <p>Для пополнения переведите на аккаут CyberSedona нужное количество вирт.</p>
+                    <form action="deposit" method="post" id="deposit-form">
+                        {% csrf_token %}
+                        <input id="deposit-form-button" type="submit" value="Проверить пополнение">
+                        <i id="deposit-loading" class="lds-dual-ring d-none"></i>
+                    </form> -->
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div data-simplebar class="col container-bg deposit-history">
+                    <table class="table">
+                        <thead>
+                            <th>Лог пополнений</th>
+                        </thead>
+                        <tbody>
+                            {% if deposit_history %}
+                            {% for deposit in deposit_history %}
+                            <tr>
+                                <td>{{ deposit.string }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td>Что-то тут пусто...</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-12 container-bg">
+            <div data-simplebar class="purchase-history">
+                <table class="table">
+                    <thead>
+                        <th>Дата</th>
+                        <th>Товар</th>
+                        <th>Цена</th>
+                        <th>Доставлено</th>
+                    </thead>
+                    <tbody>
+                        {% if purchase_history %}
+                        {% for purchase in purchase_history %}
+                        <tr>
+                            <td>{{ purchase.time|date:'Y-m-d H:i:s' }}</td>
+                            <td>{{ purchase.product }}</td>
+                            <td>{{ purchase.price }} <small>{{ purchase.currency }}</small></td>
+                            {% if purchase.delivered %}
+                            <td>✔</td>
+                            {% else %}
+                            <td>✘</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="100%">Ты еще ничего не покупал 0_0</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/account.js'%}"></script>
+{% endblock %}
