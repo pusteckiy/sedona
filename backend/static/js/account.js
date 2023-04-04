@@ -7,6 +7,31 @@ var depositFormButton = $("#deposit-form-button")
 var depositLoading = $("#deposit-loading")
 
 
+function submitClearRakBotForm(event) {
+    event.preventDefault();
+    let form = $('#clear-rakbot-form');
+    let button = $('#clear-rakbot-form-button')
+
+    $.post({
+        url: 'clear-rakbot',
+        data: form.serialize(),
+        success: function(response) {
+            if(response.status == 'ok') {
+                $.notify(response.message, 'success');
+                button.prop('disabled', true)
+            } else {
+                $.notify(response.message, 'error');
+            }   
+        }
+    });
+}
+
+const setIpField = (ip) => {
+    let ipField = $('#ip-field')
+    ipField.val(ip)
+}
+
+
 $(function() {
     nicknameForm.submit(function(event) {
         event.preventDefault();

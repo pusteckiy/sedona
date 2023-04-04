@@ -16,54 +16,45 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
 </head>
 
 <body>
-    <div id="particles-js"></div>
-    <nav class="navbar fixed-top navbar-expand-md">
+    <nav class="navbar fixed-top navbar-expand">
         <div class="container-fluid">
             <a class="navbar-brand text-white fw-bold" href="/">Sedona</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-collapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item nav-link link-light">
-                        {{ user.money }}$
-                    </li>
-                    <li class="nav-item nav-link link-light">
-                        {{ user.coins }}SC
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/">
-                            <i class="uil uil-shopping-cart-alt"></i>
-                        </a>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/account/">
-                            <i class="uil uil-user"></i>
-                        </a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/account/logout">
-                            <i class="uil uil-signout"></i>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item nav-link link-light">
+                    {{ user.money }}$
+                </li>
+                <li class="nav-item nav-link link-light">
+                    {{ user.coins }}SC
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/">
+                        <i class="uil uil-shopping-cart-alt"></i>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/account/">
+                        <i class="uil uil-user"></i>
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/account/logout">
+                        <i class="uil uil-signout"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
     {% block content %}
     {% endblock %}
-    <script src="{% static 'js/partickles.js' %}"></script>
     <script src="{% static 'js/notify.min.js' %}"></script>
 </body>
 

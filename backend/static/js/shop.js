@@ -1,18 +1,17 @@
-var balance = $("#balance")
+var buttons = document.querySelectorAll(".product-card__buy");
 
 
-window.addEventListener('click', filter, false)
-function filter(e){
-  if (e.target.className === 'buy') {
-    e.preventDefault();
-    
-    var posting = $.post( e.target.href );
-    posting.done(function(data) {
-        if(data.status == 'ok') {
-            $.notify(data.message, 'success');
-        } else {
-            $.notify(data.message, 'error');
-        }
-    })
-  }
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function (e) {
+        e.preventDefault();
+        var posting = $.post(e.target.href);
+        posting.done(function (data) {
+            if (data.status == 'ok') {
+                $.notify(data.message, 'success');
+
+            } else {
+                $.notify(data.message, 'error');
+            }
+        })
+    });
 }

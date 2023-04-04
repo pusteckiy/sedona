@@ -17,14 +17,14 @@ function API.getCommands()
     response = requests.get(config.api.url .. 'rak-bot/command', {
         headers = headers
     }).json()
-    return response['commands']
+    return response
 end
 
-function API.acceptCommand(command_id)
-    return requests.patch(config.api.url .. 'rak-bot/command', {
+function API.acceptCommand(command_id, response_json)
+    return requests.put(config.api.url .. 'rak-bot/command/' .. command_id, {
         headers = headers,
         data = {
-            ["id"] = command_id
+            ['json'] = response_json
         }
     }).json()
 end

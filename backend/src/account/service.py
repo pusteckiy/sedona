@@ -5,7 +5,7 @@ import random
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
-from config.settings import GP_LOGIN, GP_PASSWORD, PYTZ_TIME_ZONE, DOMAIN_IP
+from config.settings import GP_LOGIN, GP_PASSWORD, PYTZ_TIME_ZONE, DOMAIN
 from src.api.models import Command
 
 session = requests.Session()
@@ -18,7 +18,7 @@ def exchange_code(code: str):
         "client_secret": "2RNz8VGWRXcn1NUtRV1uh5AkXn3Ez-OR",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": f"https://{DOMAIN_IP}/account/redirect",
+        "redirect_uri": f"https://{DOMAIN}/account/redirect",
         "scope": "identify"
         }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}

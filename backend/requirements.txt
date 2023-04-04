@@ -1,0 +1,12 @@
+django
+djangorestframework
+gunicorn
+asgiref
+python-decouple
+pytz
+requests
+django-jazzmin
+drf_yasg
+psycopg2-binary
+bs4
+Pillow

@@ -1,6 +1,8 @@
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from config.settings import STATIC_URL, MEDIA_URL, MEDIA_ROOT
 

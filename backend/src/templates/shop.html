@@ -4,15 +4,21 @@
 
 {% block content %}
 <div class="container m-auto mt-5">
-    <div class="row">
+    <div class="row justify-content-center">
         {% for product in products %}
-        <div class="col container-bg product-card">
-            <img class="product-card__image" src="{{ product.photo.url }}" alt="">
-            <div class="product-card__content">
-                <div class="product-card__title">{{ product }}</div>
-                <a href="buy/{{ product.id }}" class="product-card__buy">
-                    {{ product.price }}<small>{{ product.currency}}</small>
-                </a>
+        <div class="col-lg-3 col-12 container-wrapper">
+            <div class="container-bg product-card">
+                <img class="product-card__image" src="{{ product.photo.url }}" alt="">
+                <div class="product-card__content">
+                    <div class="product-card__title">{{ product }}</div>
+                    <div class="product-card__amount">Осталось {{ product.amount }} шт.</div>
+                    <div class="product-card__button_buy_wrapper">
+                        <a href="buy/{{ product.id }}" class="product-card__buy">
+                            <i class="uil uil-shopping-cart"></i>
+                            {{ product.price }}<small>{{ product.currency }}</small>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}

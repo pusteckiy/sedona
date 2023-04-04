@@ -19,6 +19,6 @@ config.discord.hook =
 
 -- Catching
 config.catching = {}
-config.catching.salons = {'РџСЂРµРјРёСѓРј', 'Р’РѕР·РґСѓС€РЅС‹Р№', 'Luxe'}
+config.catching.salons = {'Премиум', 'Воздушный', 'Luxe'}
 
 return config

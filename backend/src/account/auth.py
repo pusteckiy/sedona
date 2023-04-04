@@ -5,7 +5,6 @@ from src.account.models import Profile
 
 class DiscordAuthenticationBackend(BaseBackend):
     def authenticate(self, _, discord_user) -> Profile:
-        print(discord_user)
         try:
             user = Profile.objects.get(id=discord_user['id'])
             if user.avatar != discord_user['avatar']:

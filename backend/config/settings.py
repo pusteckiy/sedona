@@ -5,25 +5,21 @@ import pytz
 from decouple import config
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 SRC_DIR = os.path.join(BASE_DIR, 'src')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('DJANGO_SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 GP_LOGIN = config('GP_LOGIN')
 GP_PASSWORD = config('GP_PASSWORD')
 
-DOMAIN_IP = '127.0.0.1:8000' if DEBUG else 'cyber-sedona.fun'
-DISCORD_REDIRECT_URL = f"https://discord.com/api/oauth2/authorize?client_id=821736713231007765&redirect_uri=https%3A%2F%2F{DOMAIN_IP}%2Faccount%2Fredirect&response_type=code&scope=identify"
+DOMAIN = '127.0.0.1:8000' if DEBUG else 'cyber-sedona.fun'
+DATABASE_HOST = '127.0.0.1' if DEBUG else '172.18.0.1'
+DISCORD_REDIRECT_URL = f"https://discord.com/api/oauth2/authorize?client_id=821736713231007765&redirect_uri=https%3A%2F%2F{DOMAIN}%2Faccount%2Fredirect&response_type=code&scope=identify"
 
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = [f'https://{DOMAIN_IP}', f'http://{DOMAIN_IP}']
+CSRF_TRUSTED_ORIGINS = [f'https://{DOMAIN}', f'http://{DOMAIN}']
 
 
 AUTHENTICATION_BACKENDS = [
@@ -37,7 +33,9 @@ REST_FRAMEWORK = {
 
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+
+    'EXCEPTION_HANDLER': 'src.api.exceptions.custom_exception_handler'
 }
 
 INSTALLED_APPS = [
@@ -91,23 +89,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'sedona',
         'USER': 'postgres',
         'PASSWORD': 'meloncikyt753',
-        'HOST': 'localhost',
+        'HOST': DATABASE_HOST,
         'PORT': '5432',
     }
 }
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'SECURITY_REQUIREMENTS': [{
+        'Token': []
+    }]
+}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
