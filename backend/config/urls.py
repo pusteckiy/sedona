@@ -1,18 +1,22 @@
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.conf.urls.static import static
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+from django.shortcuts import render
 
-from config.settings import STATIC_URL, MEDIA_URL, MEDIA_ROOT
+from django.conf import settings
+
+
+def index(request):
+    return render(request, 'index.html')
 
 
 urlpatterns = [
+    path('', index, name='index'),
     path('api/', include('src.api.urls')),
-    path('', include('src.shop.urls')),
+    path('shop/', include('src.shop.urls')),
     path('account/', include('src.account.urls')),
     path('admin/', admin.site.urls),
 ]
 
-# urlpatterns += static(STATIC_URL, document_root=STATIC_ROOT)
-urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

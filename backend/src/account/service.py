@@ -5,7 +5,7 @@ import random
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
-from config.settings import GP_LOGIN, GP_PASSWORD, PYTZ_TIME_ZONE, DOMAIN
+from django.conf import settings
 from src.api.models import Command
 
 session = requests.Session()
@@ -18,7 +18,7 @@ def exchange_code(code: str):
         "client_secret": "2RNz8VGWRXcn1NUtRV1uh5AkXn3Ez-OR",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": f"https://{DOMAIN}/account/redirect",
+        "redirect_uri": f"https://{settings.DOMAIN}/account/redirect",
         "scope": "identify"
         }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -62,16 +62,16 @@ def check_SAMP_payment(nickname) -> tuple:
     """ Якщо знайшло оплату по вказаному ніку то повертає лог і суму без ком. Якщо ні, то None """
     
     if not is_logged():
-        gp_login(GP_LOGIN, GP_PASSWORD)
+        gp_login(settings.GP_LOGIN, settings.GP_PASSWORD)
     
-    minus_time = datetime.now(tz=PYTZ_TIME_ZONE) - timedelta(seconds=20)
+    minus_time = datetime.now(tz=settings.PYTZ_TIME_ZONE) - timedelta(seconds=20)
     log = search_by_param('bank', 'CyberSedona')
     for row in log:
         found_regex = payment_regex.findall(row)
         if len(found_regex) != 0:
             row_date, row_nickname, row_amount = found_regex.pop()
             payment_time = datetime.strptime(row_date, '%Y-%m-%d %H:%M:%S')
-            localized_payment_time = PYTZ_TIME_ZONE.localize(payment_time, is_dst=None)
+            localized_payment_time = settings.PYTZ_TIME_ZONE.localize(payment_time, is_dst=None)
             if row_nickname == nickname and localized_payment_time > minus_time:
                 return row, int(row_amount.replace(',', ''))
     return None, None

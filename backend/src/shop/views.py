@@ -13,11 +13,6 @@ def shop_main(request):
         'products': products,
         'categories': categories,
         }
-    if request.user.is_authenticated:
-        context.update({
-            'money': request.user.money, 
-            'nickname': request.user.nickname
-        })
     return render(request, 'shop.html', context)
 
 

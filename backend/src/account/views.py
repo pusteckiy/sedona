@@ -2,17 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.conf import settings
 
 from src.account.service import exchange_code, check_SAMP_payment, send_random_code
 from src.account.models import Deposit
 from src.api.models import Command
 from src.shop.models import PurchaseHistory
 from src.account.forms import ConnectAccountForm, InputAccountCodeForm, ClearAccountFromRakBotForm
-from config.settings import DISCORD_REDIRECT_URL
 
 
 def account_login(_):
-    return redirect(DISCORD_REDIRECT_URL)
+    return redirect(settings.DISCORD_REDIRECT_URL)
 
 
 def account_login_redirect(request):
