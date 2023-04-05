@@ -12,11 +12,15 @@ class Bot(commands.Bot):
     
     async def setup_hook(self):
         await self.load_extension('cogs.rakbot')
+        await self.load_extension('cogs.account')
         await bot.tree.sync(guild = discord.Object(id=GUILD_ID))
 
     async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingAnyRole):
+            embed = discord.Embed(title='Ошибка!', description=':warning: Отсутствует нужный доступ.', color=discord.Color.red())
+
         if not isinstance(error, commands.CommandNotFound):
-            embed = discord.Embed(title='Ошибочка!', description=str(error), color=discord.Color.red())
+            embed = discord.Embed(title='Ошибка!', description=str(error), color=discord.Color.red())
             await ctx.reply(embed=embed, ephemeral=True)
 
     async def on_ready(self):

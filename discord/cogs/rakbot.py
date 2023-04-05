@@ -20,11 +20,9 @@ class RakBot(commands.Cog):
         self.bot = bot
 
     @commands.hybrid_command(name='form', with_app_command=True, description='Проверит `form` и отправит на обработку.')
+    @commands.has_any_role(MANAGEMENT_ADMIN_ROLE_ID)
     @app_commands.guilds(discord.Object(id=GUILD_ID))
     async def check_and_save_form(self, ctx: discord.Message, *, form: str):
-        if MANAGEMENT_ADMIN_ROLE_ID not in [role.id for role in ctx.author.roles]:
-            return await ctx.reply('**:warning: Отсутствует доступ.**')
-
         valid_commands, invalid_commands = forms.check_forms(form.split('\n'))
         for command in valid_commands:
             requests.post(API_URL + '/rak-bot/command',
@@ -35,21 +33,17 @@ class RakBot(commands.Cog):
         await ctx.reply(embed=discord.Embed(description=valid_forms+invalid_forms, color=discord.Color.dark_blue()))
 
     @commands.hybrid_command(name='command', with_app_command=True, description='Напишет в чат текст с `command`')
+    @commands.has_any_role(MANAGEMENT_ADMIN_ROLE_ID)
     @app_commands.guilds(discord.Object(id=GUILD_ID))
     async def send_command_to_chat(self, ctx: discord.Message, *, command: str):
-        if MANAGEMENT_ADMIN_ROLE_ID not in [role.id for role in ctx.author.roles]:
-            return await ctx.reply('**:warning: Отсутствует доступ.**')
-
         response = requests.post(
             API_URL + '/rak-bot/command', headers=headers, data={'text': command}).json()
-        await ctx.reply(f'**:ghost: {response}**')
+        await ctx.reply(f"**:ghost: Запрос №{response['id']} отправлен на обработку.**")
 
     @commands.hybrid_command(name='getforms', with_app_command=True, description='Отправит список актуальных для выдачи форм.')
+    @commands.has_any_role(MANAGEMENT_ADMIN_ROLE_ID)
     @app_commands.guilds(discord.Object(id=GUILD_ID))
     async def get_list_of_forms(self, ctx: discord.Message):
-        if MANAGEMENT_ADMIN_ROLE_ID not in [role.id for role in ctx.author.roles]:
-            return await ctx.reply('**:warning: Отсутствует доступ.**')
-
         response = requests.get(
             API_URL + '/rak-bot/command', headers=headers).json()
         command_list = [
@@ -58,11 +52,9 @@ class RakBot(commands.Cog):
         await ctx.reply(embed=discord.Embed(title='На выдаче:', description=text, color=discord.Color.dark_blue()))
 
     @commands.hybrid_command(name='check', with_app_command=True, description='Получить статистику игрока.')
+    @commands.has_any_role(MANAGEMENT_ADMIN_ROLE_ID, LVL_4_ADMIN_ROLE_ID)
     @app_commands.guilds(discord.Object(id=GUILD_ID))
     async def get_list_of_forms(self, ctx: discord.Message, *, username: str):
-        if MANAGEMENT_ADMIN_ROLE_ID not in [role.id for role in ctx.author.roles]:
-            return await ctx.reply('**:warning: Отсутствует доступ.**')
-
         response = requests.post(
             API_URL + '/rak-bot/checkoff', params={'username': username}, headers=headers).json()
         message = await ctx.reply(f'**:ghost: Запрос №{response["id"]} обрабатывается..**')
@@ -71,7 +63,8 @@ class RakBot(commands.Cog):
             API_URL + f'/rak-bot/command/{response["id"]}', headers=headers).json()
         player = response['response']
         title, description = check.form_player_stats_answer(player)
-        embed = discord.Embed(title=title, color=discord.Color.dark_blue(), description=description)
+        embed = discord.Embed(
+            title=title, color=discord.Color.dark_blue(), description=description)
         embed.set_footer(text=f"Запрос №{response['id']} от [{ctx.author.id}]")
         await message.edit(content='', embed=embed)
 
