@@ -6,7 +6,7 @@ from django.conf import settings
 
 from src.account.service import exchange_code, check_SAMP_payment, send_random_code
 from src.account.models import Deposit
-from src.api.models import Command
+from src.api.models import Command, Status
 from src.shop.models import PurchaseHistory
 from src.account.forms import ConnectAccountForm, InputAccountCodeForm, ClearAccountFromRakBotForm
 
@@ -44,9 +44,11 @@ def get_client_ip(request):
 def account_main(request: HttpRequest):
     purchase_history = PurchaseHistory.objects.all().filter(profile=request.user)
     deposit_history = Deposit.objects.all().filter(profile=request.user)
+    bot_status = Status.objects.first()
     context = {
         'user': request.user,
         'found_ip': get_client_ip(request),
+        'bot_status': bot_status,
         'deposit_history': deposit_history,
         'purchase_history': purchase_history,
         'connect_account_form': ConnectAccountForm(),
