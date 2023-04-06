@@ -29,4 +29,13 @@ function API.acceptCommand(command_id, response_json)
     }).json()
 end
 
+function API.serverConnect(status)
+    return requests.put(config.api.url .. 'rak-bot/status', {
+        headers = headers,
+        data = {
+            ['value'] = status
+        }
+    })
+end
+
 return API

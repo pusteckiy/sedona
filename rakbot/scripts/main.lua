@@ -14,10 +14,12 @@ local rakBotIp = ''
 
 function onConnect()
     discord.send('**[A]** RakBot connected to the server.')
+    API.serverConnect(true)
 end
 
 function onDisconnect()
     discord.send('**[A]** RakBot disconnected from the server.')
+    API.serverConnect(false)
     config.account.isAuth = false
     clearTasks()
 end
@@ -223,6 +225,7 @@ function clearRakBot()
                 counter = counter + 1
                 if lastRakBotIp ~= rakBotIp then
                     sendInput('/banipoff ' .. rakBotIp .. ' rakbot')
+                    sendInput('/skick ' .. player[1])
                 end
                 lastRakBotIp = rakBotIp
                 print('Ban. Try # ' .. counter .. ' BotIP: [' .. rakBotIp .. '] UserIP: [' .. player[2] .. ']')
