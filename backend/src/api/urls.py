@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path('rak-bot/status', command.StatusView.as_view(), name='status'),
     path('rak-bot/command', command.CommandView.as_view(), name='command'),
     path('rak-bot/command/<int:command_id>', command.CommandDetailView.as_view(), name='command-detail'),
     path('rak-bot/checkoff', functions.CheckoffView.as_view(), name='checkoff'),

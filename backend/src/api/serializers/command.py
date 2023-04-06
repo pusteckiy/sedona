@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 
-from src.api.models import Command
+from src.api.models import Command, Status
 
 
 class CommandQuerySerializer(serializers.Serializer):
@@ -31,3 +31,9 @@ class AcceptCommandSerializer(serializers.Serializer):
         command.accepted = True
         command.save()
         return command
+
+
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = ('value', 'last_update',)

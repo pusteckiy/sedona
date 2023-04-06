@@ -7,8 +7,8 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 
 
-from src.api.models import Command
-from src.api.serializers.command import CommandSerializer, CreateCommandSerializer, AcceptCommandSerializer, CommandQuerySerializer
+from src.api.models import Command, Status
+from src.api.serializers.command import CommandSerializer, CreateCommandSerializer, AcceptCommandSerializer, CommandQuerySerializer, StatusSerializer
 
 
 class CommandView(APIView):
@@ -18,9 +18,9 @@ class CommandView(APIView):
 
     @staticmethod
     @swagger_auto_schema(
-        tags=["Command"], 
-        operation_summary="Получить список команд.", 
-        query_serializer=CommandQuerySerializer, 
+        tags=["RakBot"],
+        operation_summary="Получить список команд.",
+        query_serializer=CommandQuerySerializer,
         responses={200: CommandSerializer(many=True)})
     def get(request):
         serializer = CommandQuerySerializer(data=request.GET)
@@ -36,9 +36,9 @@ class CommandView(APIView):
 
     @staticmethod
     @swagger_auto_schema(
-        tags=["Command"], 
-        operation_summary="Отправить команду на обработку.", 
-        request_body=CreateCommandSerializer, 
+        tags=["RakBot"],
+        operation_summary="Отправить команду на обработку.",
+        request_body=CreateCommandSerializer,
         responses={201: CommandSerializer})
     def post(request):
         serializer = CreateCommandSerializer(
@@ -55,7 +55,7 @@ class CommandDetailView(APIView):
 
     @staticmethod
     @swagger_auto_schema(
-        tags=["Command"],
+        tags=["RakBot"],
         operation_summary="Получить информацию о команде",
         responses={200: CommandSerializer}
     )
@@ -66,11 +66,41 @@ class CommandDetailView(APIView):
 
     @staticmethod
     @swagger_auto_schema(
-        tags=["Command"], 
-        request_body=AcceptCommandSerializer, 
+        tags=["RakBot"],
+        request_body=AcceptCommandSerializer,
         responses={200: CommandSerializer})
     def put(request, command_id):
-        serializer = AcceptCommandSerializer(data=request.data, context={"command_id": command_id})
+        serializer = AcceptCommandSerializer(
+            data=request.data, context={"command_id": command_id})
         serializer.is_valid(raise_exception=True)
         command = serializer.save()
         return Response(CommandSerializer(command).data, status=status.HTTP_200_OK)
+
+
+class StatusView(APIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminUser,)
+
+    @staticmethod
+    @swagger_auto_schema(
+        tags=["RakBot"],
+        operation_summary="Проверка статуса ракбота",
+        responses={200: StatusSerializer}
+    )
+    def get(_):
+        status = Status.objects.first()
+        serializer = StatusSerializer(status)
+        return Response(serializer.data)
+
+    @staticmethod
+    @swagger_auto_schema(
+        tags=["RakBot"],
+        request_body=StatusSerializer,
+        responses={200: StatusSerializer})
+    def put(request):
+        status = Status.objects.first()
+        serializer = StatusSerializer(status, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
