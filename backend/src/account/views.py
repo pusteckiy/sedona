@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.conf import settings
 
 from src.account.service import exchange_code, check_SAMP_payment, send_random_code
-from src.account.models import Deposit
+from src.account.models import Deposit, Profile
 from src.api.models import Command, Status
 from src.shop.models import PurchaseHistory
 from src.account.forms import ConnectAccountForm, InputAccountCodeForm, ClearAccountFromRakBotForm
@@ -69,6 +69,10 @@ def account_connect(request: HttpRequest):
         if request.user.is_active:
             return JsonResponse({'status': 'error', 'message': 'Аккаунт уже активирован.'})
         nickname = request.POST.get('nickname')
+        is_same_name = Profile.objects.filter(nickname=nickname)
+        if is_same_name:
+            return JsonResponse({'status': 'error', 'message': 'Аккаунт с таким ником уже привязан.'})
+        
         verification_code = send_random_code(nickname)
         request.user.nickname = nickname
         request.user.verification_code = verification_code
