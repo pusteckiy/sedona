@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.conf import settings
 
 from src.account.service import exchange_code, check_SAMP_payment, send_random_code
-from src.account.models import Deposit, Profile
+from src.account.models import Deposit, Profile, VerificationCode
 from src.api.models import Command, Status
 from src.shop.models import PurchaseHistory
 from src.account.forms import ConnectAccountForm, InputAccountCodeForm, ClearAccountFromRakBotForm
@@ -73,10 +73,9 @@ def account_connect(request: HttpRequest):
         if is_same_name:
             return JsonResponse({'status': 'error', 'message': 'Аккаунт с таким ником уже привязан.'})
         
-        verification_code = send_random_code(nickname)
-        request.user.nickname = nickname
-        request.user.verification_code = verification_code
-        request.user.save()
+        generated_code = send_random_code(nickname)
+        verification = VerificationCode(code=generated_code, user=request.user, nickname=nickname)
+        verification.save()
         return JsonResponse({'status': 'ok', 'message': 'Отправлен код активации.'})
 
 
@@ -84,10 +83,11 @@ def account_connect(request: HttpRequest):
 def account_connect_code(request: HttpRequest):
     if request.method == 'POST':
         input_code = request.POST.get('code')
-        user_code = request.user.verification_code
-        if int(input_code) != user_code:
+        verification = VerificationCode.objects.filter(user=request.user).last()
+        if int(input_code) != verification.code:
             return JsonResponse({'status': 'error', 'message': 'Неправильный код активации.'})
         request.user.is_active = True
+        request.user.nickname = verification.nickname
         request.user.save()
         return JsonResponse({'status': 'ok', 'message': 'Аккаунт активирован.'})
 

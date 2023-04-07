@@ -1,9 +1,13 @@
 from django.contrib import admin
 from rest_framework.authtoken.models import Token
 
-from src.account.models import Profile, Deposit
+from src.account.models import Profile, Deposit, VerificationCode
 from src.shop.models import PurchaseHistory
 
+
+class VerificationCodeInline(admin.TabularInline):
+    model = VerificationCode
+    list_display = ()
 
 class DepositInline(admin.TabularInline):
     model = Deposit
@@ -21,13 +25,14 @@ class TokenInline(admin.TabularInline):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
 
-    fields = (('nickname', 'id'), ('money', 'coins'), ('verification_code', 'is_active'),)
+    fields = (('nickname', 'id'), ('money', 'coins'), ('is_active'),)
     list_display = ('nickname', 'id',)
 
     inlines = [
         DepositInline,
         PurchaseHistoryInline,
         TokenInline,
+        VerificationCodeInline,
     ]
 
     def __str__(self):

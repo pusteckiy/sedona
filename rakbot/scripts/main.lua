@@ -219,8 +219,8 @@ function clearRakBot()
 
             local player = table.remove(rakBotClearQueue)
             sendInput('/getip ' .. player[1])
-
             wait(1000)
+
             while rakBotIp ~= player[2] do
                 counter = counter + 1
                 if lastRakBotIp ~= rakBotIp then
@@ -246,7 +246,7 @@ function clearRakBot()
                     })
                     break
                 end
-
+                sendInput('/getip ' .. player[1])
                 wait(5000)
             end
         end
