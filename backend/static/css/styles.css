@@ -1,0 +1,71 @@
+:root {
+    --body-color: #F5F5F5;
+    --bg-color: #fff;
+    --max-width: 1200px;
+    --white: #fff;
+    --black: #1E1E1E;
+    --gradient: linear-gradient(96.00deg, #8EC5FC 0%, #E0C3FC 100%);
+}
+
+body {
+    background-color: var(--body-color);
+    font-family: 'Inter';
+    color: var(--black);
+    transition: 0.3s ease-in-out;
+}
+
+.app {
+    max-width: var(--max-width);
+    min-height: 100vh;
+    margin: 0 auto;
+    background-color: var(--bg-color);
+}
+
+.profile-pic {
+    border-radius: 20px;
+}
+
+.gradient-wrapper {
+    background: var(--gradient);
+    border-radius: 20px;
+    height: 100%;
+    width: 100%;
+}
+
+.function-wrapper {
+    border-top: 2px solid var(--black);
+}
+
+.input-field {
+    border: none;
+    outline: none;
+    background-color: var(--white);
+    color: var(--black);
+    border-bottom: 2px solid var(--black);
+}
+
+.button {
+    border: none;
+    background-color: var(--black);
+    border-radius: 50px;
+    color: var(--white);
+    padding: 5%;
+}
+.button:disabled {
+    background-image: var(--gradient);
+}
+
+.found-ip:hover {
+    cursor: pointer;
+}
+
+.rakbot-system-description {
+    font-size: 0.8rem;
+}
+
+.blur-text {
+    filter: blur(5px);
+}
+.blur-text:hover {
+    filter: none;
+}

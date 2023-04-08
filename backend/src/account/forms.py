@@ -8,7 +8,7 @@ class ConnectAccountForm(forms.Form):
         max_length=38, 
         min_length=3, 
         widget=forms.TextInput(
-            attrs={'class': 'input-form', 'placeholder': 'Никнейм'}
+            attrs={'class': 'input-field w-100', 'placeholder': 'Никнейм'}
             )
         )
 
@@ -19,7 +19,7 @@ class InputAccountCodeForm(forms.Form):
         max_length=6, 
         min_length=6,
         widget=forms.TextInput(
-            attrs={'class': 'input-form', 'placeholder': 'Код подтверждения'}
+            attrs={'class': 'input-field w-100', 'placeholder': 'Код подтверждения'}
             )
         )
 
@@ -27,4 +27,4 @@ class InputAccountCodeForm(forms.Form):
 class ClearAccountFromRakBotForm(forms.Form):
     ip = forms.GenericIPAddressField(protocol='IPv4', 
                                      validators=[validate_ipv46_address], 
-                                     widget=forms.TextInput(attrs={'class': 'input-form', 'placeholder': 'Введите свой IPv4 адрес', 'id': 'ip-field'}))
+                                     widget=forms.TextInput(attrs={'class': 'input-field w-100', 'placeholder': 'Введите свой IPv4 адрес', 'id': 'ip-field'}))

@@ -7,7 +7,6 @@ from django.conf import settings
 from src.account.service import exchange_code, check_SAMP_payment, send_random_code
 from src.account.models import Deposit, Profile, VerificationCode
 from src.api.models import Command, Status
-from src.shop.models import PurchaseHistory
 from src.account.forms import ConnectAccountForm, InputAccountCodeForm, ClearAccountFromRakBotForm
 
 
@@ -22,10 +21,10 @@ def account_login_redirect(request):
     discord_user = exchange_code(code)
     user = authenticate(request, discord_user=discord_user)
     login(request, user)
-    return redirect('/account')
+    return redirect('/')
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='login')
 def account_logout(request: HttpRequest):
     logout(request)
     return redirect('/')
@@ -40,25 +39,23 @@ def get_client_ip(request):
     return ip
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='login')
 def account_main(request: HttpRequest):
-    purchase_history = PurchaseHistory.objects.all().filter(profile=request.user)
-    deposit_history = Deposit.objects.all().filter(profile=request.user)
     bot_status = Status.objects.first()
+    users = Profile.objects.filter(is_active=True).count()
     context = {
         'user': request.user,
         'found_ip': get_client_ip(request),
         'bot_status': bot_status,
-        'deposit_history': deposit_history,
-        'purchase_history': purchase_history,
         'connect_account_form': ConnectAccountForm(),
         'input_account_code_form': InputAccountCodeForm(),
         'clear_account_from_rakbot_form': ClearAccountFromRakBotForm(),
+        'users': users
     }
     return render(request, 'account.html', context)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='login')
 def account_connect(request: HttpRequest):
     if request.method == 'GET':
         request.user.is_active = False
@@ -79,7 +76,7 @@ def account_connect(request: HttpRequest):
         return JsonResponse({'status': 'ok', 'message': 'Отправлен код активации.'})
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='login')
 def account_connect_code(request: HttpRequest):
     if request.method == 'POST':
         input_code = request.POST.get('code')
@@ -92,7 +89,7 @@ def account_connect_code(request: HttpRequest):
         return JsonResponse({'status': 'ok', 'message': 'Аккаунт активирован.'})
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='login')
 def account_deposit(request: HttpRequest):
     if request.method == 'POST':
         nickname = request.user.nickname
@@ -112,7 +109,7 @@ def account_deposit(request: HttpRequest):
         })
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='login')
 def account_clear_rakbot(request: HttpRequest):
     if request.method == 'POST':
         form = ClearAccountFromRakBotForm(request.POST)

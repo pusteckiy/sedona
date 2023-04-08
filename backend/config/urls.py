@@ -11,10 +11,8 @@ def index(request):
 
 
 urlpatterns = [
-    path('', index, name='index'),
     path('api/', include('src.api.urls')),
-    path('shop/', include('src.shop.urls')),
-    path('account/', include('src.account.urls')),
+    path('', include('src.account.urls')),
     path('admin/', admin.site.urls),
 ]
 

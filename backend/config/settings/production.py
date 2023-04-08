@@ -4,7 +4,7 @@ DEBUG = False
 
 
 DOMAIN = 'cyber-sedona.fun'
-DISCORD_REDIRECT_URL = f"https://discord.com/api/oauth2/authorize?client_id=821736713231007765&redirect_uri=https%3A%2F%2F{DOMAIN}%2Faccount%2Fredirect&response_type=code&scope=identify"
+DISCORD_REDIRECT_URL = f"https://discord.com/api/oauth2/authorize?client_id=821736713231007765&redirect_uri=https%3A%2F%2F{DOMAIN}%2Fredirect&response_type=code&scope=identify"
 CSRF_TRUSTED_ORIGINS = [f'https://{DOMAIN}', f'http://{DOMAIN}']
 APP_URL = f'https://{DOMAIN}'
 

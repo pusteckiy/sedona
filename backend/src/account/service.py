@@ -18,7 +18,7 @@ def exchange_code(code: str):
         "client_secret": "2RNz8VGWRXcn1NUtRV1uh5AkXn3Ez-OR",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": f"https://{settings.DOMAIN}/account/redirect",
+        "redirect_uri": f"https://{settings.DOMAIN}/redirect",
         "scope": "identify"
         }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
