@@ -1,18 +1,19 @@
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
-from django.shortcuts import render
+from django.shortcuts import redirect
 
 from django.conf import settings
 
 
-def index(request):
-    return render(request, 'index.html')
+def temp_account_redirect(request):
+    return redirect('/')
 
 
 urlpatterns = [
-    path('api/', include('src.api.urls')),
     path('', include('src.account.urls')),
+    path('api/', include('src.api.urls')),
+    path('account/', temp_account_redirect),
     path('admin/', admin.site.urls),
 ]
 
